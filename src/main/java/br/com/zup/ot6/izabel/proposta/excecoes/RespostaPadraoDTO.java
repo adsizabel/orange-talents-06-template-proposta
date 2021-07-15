@@ -7,7 +7,7 @@ public class RespostaPadraoDTO {
 	private String campo;
 	@JsonProperty("mensagem")
 	private String mensagem;
-	
+
 	public RespostaPadraoDTO(String campo, String mensagem) {
 		super();
 		this.campo = campo;

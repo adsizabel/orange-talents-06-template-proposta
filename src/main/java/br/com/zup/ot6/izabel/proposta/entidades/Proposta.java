@@ -1,7 +1,6 @@
 package br.com.zup.ot6.izabel.proposta.entidades;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -55,8 +54,6 @@ public class Proposta {
 	public Long getId() {
 		return id;
 	}
-
-	
 	
 	
 

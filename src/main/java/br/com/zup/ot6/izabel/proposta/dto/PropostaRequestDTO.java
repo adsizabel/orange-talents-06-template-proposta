@@ -38,5 +38,9 @@ public class PropostaRequestDTO {
 		return new Proposta(nome, cpfCnpj, email, endereco, salario);
 	}
 
+	public String getCpfCnpj() {
+		return cpfCnpj;
+	}
+
 	
 }

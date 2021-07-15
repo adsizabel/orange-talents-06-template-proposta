@@ -3,27 +3,17 @@ package br.com.zup.ot6.izabel.proposta.excecoes;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class TratarRespostaValidador {
-	
-	MessageSource messageSource;
-	
-	@Autowired
-	public TratarRespostaValidador(MessageSource messageSource) {
-		super();
-		this.messageSource = messageSource;
-	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(BindException.class)
@@ -36,6 +26,17 @@ public class TratarRespostaValidador {
 		
 	}
 	
+	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+    public ErrosDTO tratamentoGenericoMethodArgument(MethodArgumentNotValidException e){
+        
+		List<FieldError> fieldErros =  e.getBindingResult().getFieldErrors();
+		List<ObjectError> errosGlobais= e.getBindingResult().getGlobalErrors();
+		
+		return montaObjetoErrosDTO(fieldErros, errosGlobais);
+		
+	}
+
 	private ErrosDTO montaObjetoErrosDTO(List<FieldError> fieldErros, List<ObjectError> errosGlobais) {
 		return new ErrosDTO(getErrosCampos(fieldErros), getErrosGlobais(errosGlobais));		
 	}
@@ -55,8 +56,5 @@ public class TratarRespostaValidador {
 		}
 		return dto;
 	}
-	
-	private String getMessagensErros(ObjectError erro) {
-		return messageSource.getMessage(erro, LocaleContextHolder.getLocale());
-	}
+
 }
