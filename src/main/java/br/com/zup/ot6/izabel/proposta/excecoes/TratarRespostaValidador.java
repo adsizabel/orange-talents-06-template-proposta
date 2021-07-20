@@ -36,7 +36,7 @@ public class TratarRespostaValidador {
 		return montaObjetoErrosDTO(fieldErros, errosGlobais);
 		
 	}
-
+	
 	private ErrosDTO montaObjetoErrosDTO(List<FieldError> fieldErros, List<ObjectError> errosGlobais) {
 		return new ErrosDTO(getErrosCampos(fieldErros), getErrosGlobais(errosGlobais));		
 	}
