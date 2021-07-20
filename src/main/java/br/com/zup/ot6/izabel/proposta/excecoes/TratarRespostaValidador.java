@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import feign.FeignException;
+
 @RestControllerAdvice
 public class TratarRespostaValidador {
 
@@ -36,7 +38,7 @@ public class TratarRespostaValidador {
 		return montaObjetoErrosDTO(fieldErros, errosGlobais);
 		
 	}
-
+	
 	private ErrosDTO montaObjetoErrosDTO(List<FieldError> fieldErros, List<ObjectError> errosGlobais) {
 		return new ErrosDTO(getErrosCampos(fieldErros), getErrosGlobais(errosGlobais));		
 	}
