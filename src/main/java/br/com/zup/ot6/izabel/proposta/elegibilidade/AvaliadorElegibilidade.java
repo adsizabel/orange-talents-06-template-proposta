@@ -15,10 +15,10 @@ public class AvaliadorElegibilidade {
 
 	private static final Logger logger = LoggerFactory.getLogger(AvaliadorElegibilidade.class);
 
-	private final ElegibilidadeClientFeign cliente;
+	private final ElegibilidadeClienteFeign cliente;
 
 	@Autowired
-	public AvaliadorElegibilidade(ElegibilidadeClientFeign cliente) {
+	public AvaliadorElegibilidade(ElegibilidadeClienteFeign cliente) {
 		this.cliente = cliente;
 	}
 	
@@ -42,5 +42,7 @@ public class AvaliadorElegibilidade {
 			return RetornoElegibilidade.COM_RESTRICAO;
 		}
 	}
+	
+	
 
 }

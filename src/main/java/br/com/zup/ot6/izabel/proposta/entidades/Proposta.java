@@ -2,19 +2,20 @@ package br.com.zup.ot6.izabel.proposta.entidades;
 
 import java.math.BigDecimal;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 import br.com.zup.ot6.izabel.proposta.elegibilidade.Elegibilidade;
-import br.com.zup.ot6.izabel.proposta.elegibilidade.RetornoElegibilidade;
 import br.com.zup.ot6.izabel.proposta.excecoes.CpfCnpj;
 
 @Entity
@@ -37,6 +38,8 @@ public class Proposta {
 	private BigDecimal salario;
 	@Enumerated(EnumType.STRING)
 	private Elegibilidade elegibilidade;
+	@OneToOne(cascade = CascadeType.ALL)
+	private Cartao cartao;
 	
 	@Deprecated
 	public Proposta() {}
@@ -71,6 +74,14 @@ public class Proposta {
 		return endereco;
 	}
 
+	public Cartao getCartao() {
+		return cartao;
+	}
+	
+	public void associaCartao(Cartao cartao) {
+		this.cartao = cartao;
+	}
+
 	/** Este método é utilizado para atualização do status de elegibilidade do cliente
 	 * após a consulta de seus dados de solicitação de prosposta na API externa que valida a elegibilidade do mesmo.
 	 * 
@@ -79,7 +90,7 @@ public class Proposta {
 	public void setElegibilidade(Elegibilidade elegibilidade) {
 		this.elegibilidade = elegibilidade;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Proposta [id=" + id + ", nome=" + nome + ", cpfCnpj=" + cpfCnpj + ", email=" + email + ", endereco="
