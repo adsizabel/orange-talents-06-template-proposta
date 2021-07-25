@@ -78,6 +78,14 @@ public class Proposta {
 		return cartao;
 	}
 	
+	public BigDecimal getSalario() {
+		return salario;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
 	public void associaCartao(Cartao cartao) {
 		this.cartao = cartao;
 	}

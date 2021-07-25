@@ -15,13 +15,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.zup.ot6.izabel.proposta.dto.PropostaRequestDTO;
+import br.com.zup.ot6.izabel.proposta.dto.PropostaResponseDTO;
 import br.com.zup.ot6.izabel.proposta.elegibilidade.AvaliadorElegibilidade;
 import br.com.zup.ot6.izabel.proposta.elegibilidade.RetornoElegibilidade;
 import br.com.zup.ot6.izabel.proposta.entidades.Proposta;
@@ -51,6 +52,19 @@ public class PropostaControlador {
 	public void init(WebDataBinder binder) {
 		binder.addValidators(propostaValidador);
 	}
+	
+	@GetMapping(value = "/proposta/{id}")
+	public ResponseEntity<PropostaResponseDTO> acompanharProposta(@PathVariable("id") Long id) {
+		Proposta proposta = entityManager.find(Proposta.class, id);
+		
+		if(proposta == null) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		PropostaResponseDTO propostaResponseDTO = new PropostaResponseDTO(proposta);
+		return ResponseEntity.ok(propostaResponseDTO);
+	}
+
 	
 	@PostMapping(value = "/proposta")
 	@Transactional
