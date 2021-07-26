@@ -26,7 +26,7 @@ public class TratarRespostaValidador {
 		
 	}
 	
-	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrosDTO tratamentoGenericoMethodArgument(MethodArgumentNotValidException e){
         

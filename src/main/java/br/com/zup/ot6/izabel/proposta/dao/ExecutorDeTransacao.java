@@ -27,4 +27,9 @@ public class ExecutorDeTransacao {
 	public <T> T atualizaEComita(T objeto) {
 		return manager.merge(objeto);
     }
+	
+	@Transactional
+	public <T> T pesquisa(Class<T> classe, Long id) {
+		return manager.find(classe, id);
+    }
 }
