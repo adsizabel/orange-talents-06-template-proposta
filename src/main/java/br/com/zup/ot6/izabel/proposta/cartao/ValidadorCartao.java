@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import br.com.zup.ot6.izabel.proposta.dto.BloqueioRequest;
+import br.com.zup.ot6.izabel.proposta.dto.BloqueioResponse;
 import br.com.zup.ot6.izabel.proposta.dto.ElegibilidadeRequest;
 import br.com.zup.ot6.izabel.proposta.dto.ElegibilidadeResponse;
 import br.com.zup.ot6.izabel.proposta.elegibilidade.ElegibilidadeClienteFeign;
@@ -21,11 +23,13 @@ public class ValidadorCartao {
 
 	private static final Logger logger = LoggerFactory.getLogger(ValidadorCartao.class);
 
-	private final ElegibilidadeClienteFeign cliente;
+	private final ElegibilidadeClienteFeign clienteElegibilidade;
+	private final CartaoClienteFeign clienteBloqueio;
 
 	@Autowired
-	public ValidadorCartao(ElegibilidadeClienteFeign cliente) {
-		this.cliente = cliente;
+	public ValidadorCartao(ElegibilidadeClienteFeign clienteElegibilidade, CartaoClienteFeign clienteBloqueio) {
+		this.clienteElegibilidade = clienteElegibilidade;
+		this.clienteBloqueio = clienteBloqueio;
 	}
 	
 	public RetornoElegibilidade avaliaElegibilidade(Proposta proposta) {
@@ -37,7 +41,7 @@ public class ValidadorCartao {
 			
 			logger.info("Enviando dados: {}", elegibilidadeRequest.toString());
 			
-			ElegibilidadeResponse elegibilidadeResponse = cliente.analisaElegibilidade(elegibilidadeRequest);
+			ElegibilidadeResponse elegibilidadeResponse = clienteElegibilidade.analisaElegibilidade(elegibilidadeRequest);
 			
 			logger.info("Elegibilidade: {}", elegibilidadeResponse.toString());
 			
@@ -47,6 +51,25 @@ public class ValidadorCartao {
 			logger.info(e.getLocalizedMessage());
 			return RetornoElegibilidade.COM_RESTRICAO;
 		}
+	}
+	
+	public BloqueioResponse notificaBloqueio(Cartao cartao, BloqueioRequest bloqueioRequest) {
+		
+		logger.info("Inicio da notificação de bloqueio do cartão");
+
+		if(jaBloqueado(cartao)) {
+			throw new IllegalStateException("Cartão já está bloqueado");
+		}
+		
+		try {
+			BloqueioResponse bloqueioResponse = clienteBloqueio.notificaBloqueioAoLegado(cartao.getNumero(), bloqueioRequest);
+			logger.info("Notificação ao Legado Realizada");
+			return bloqueioResponse;
+		} catch (FeignException e) {
+			logger.info("Não foi possível efetuar esta solicitação. {} ", e.getMessage());
+			throw new IllegalStateException("Não foi possível efetuar esta solicitação.");
+		}
+		
 	}
 	
 	public Bloqueio atualizarBloqueio(Cartao cartao, String ip, String sistemaResponsavel) {

@@ -7,7 +7,7 @@ import br.com.zup.ot6.izabel.proposta.dto.ElegibilidadeRequest;
 import br.com.zup.ot6.izabel.proposta.dto.ElegibilidadeResponse;
 
 
-@FeignClient(name="elegibilidade", url = "http://localhost:9999/api/solicitacao")
+@FeignClient(name="elegibilidade", url = "${feign.solicitacao.url}")
 public interface ElegibilidadeClienteFeign {
 
 	@PostMapping

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.zup.ot6.izabel.proposta.cartao.ValidadorCartao;
+import br.com.zup.ot6.izabel.proposta.dto.BloqueioRequest;
 import br.com.zup.ot6.izabel.proposta.entidades.Bloqueio;
 import br.com.zup.ot6.izabel.proposta.entidades.Cartao;
 
@@ -39,15 +40,20 @@ public class BloqueioCartaoControlador {
 		String ip = validadorCartao.recuperaIp(request);
 		String sistemaResponsavel = request.getHeader(HttpHeaders.USER_AGENT);
 		
+		BloqueioRequest bloqueioRequest = new BloqueioRequest(sistemaResponsavel);
+		
 		Cartao cartao = entityManager.find(Cartao.class, id);
 		if(cartao == null) {
 			return ResponseEntity.notFound().build();
 		}
 		
+		validadorCartao.notificaBloqueio(cartao, bloqueioRequest);
+		
 		Bloqueio bloqueio = validadorCartao.atualizarBloqueio(cartao, sistemaResponsavel, ip);
+		
 		entityManager.persist(bloqueio);
 		
-		return ResponseEntity.ok(null);
+		return ResponseEntity.ok().build();
 	}
 
 
