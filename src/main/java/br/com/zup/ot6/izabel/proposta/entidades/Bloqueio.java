@@ -2,9 +2,11 @@ package br.com.zup.ot6.izabel.proposta.entidades;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -17,25 +19,34 @@ public class Bloqueio {
 	@GeneratedValue
 	private Long id;
 	@NotNull
-	@CreationTimestamp
-	private LocalDate bloqueadoEm;
+	private LocalDate bloqueadoEm = LocalDate.now();
 	@NotBlank
 	private String sistemaResponsavel;
-	@NotNull
-	private Boolean ativo;
+	@NotBlank
+	private String ip;
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Cartao cartao;
 	
+	@Deprecated
 	public Bloqueio() {}
 
-	public Bloqueio(@NotBlank String sistemaResponsavel, @NotNull Boolean ativo) {
+	public Bloqueio(@NotBlank String sistemaResponsavel, @NotBlank String ip, Cartao cartao) {
 		super();
 		this.sistemaResponsavel = sistemaResponsavel;
-		this.ativo = ativo;
+		this.ip = ip;
+		this.cartao = cartao;
 	}
 
-	@Override
-	public String toString() {
-		return "Bloqueio [id=" + id + ", bloqueadoEm=" + bloqueadoEm + ", sistemaResponsavel=" + sistemaResponsavel
-				+ ", ativo=" + ativo + "]";
+	public String getSistemaResponsavel() {
+		return sistemaResponsavel;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public Cartao getCartao() {
+		return cartao;
 	}
 	
 	

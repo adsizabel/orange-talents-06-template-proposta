@@ -3,6 +3,8 @@ package br.com.zup.ot6.izabel.proposta.excecoes;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -37,6 +39,20 @@ public class TratarRespostaValidador {
 		
 	}
 	
+	@ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+	@ExceptionHandler(IllegalStateException.class)
+    public ErrosDTO tratamentoGenericoUnprocessableEntity(IllegalStateException e){
+        
+		ErrosDTO errosDTO = new ErrosDTO();
+		
+		String campo = e.getLocalizedMessage();
+		String mensagem = e.getMessage();
+		
+		errosDTO.addErrosCampos(campo, mensagem);
+
+		return errosDTO;
+	}
+	
 	private ErrosDTO montaObjetoErrosDTO(List<FieldError> fieldErros, List<ObjectError> errosGlobais) {
 		return new ErrosDTO(getErrosCampos(fieldErros), getErrosGlobais(errosGlobais));		
 	}
@@ -57,4 +73,6 @@ public class TratarRespostaValidador {
 		return dto;
 	}
 
+	
+	
 }

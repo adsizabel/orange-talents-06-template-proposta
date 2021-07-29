@@ -53,7 +53,7 @@ public class CartaoResponse {
 	}
 
 	public Cartao converterParaEntidade(Proposta proposta) {
-		return new Cartao(emitidoEm, titular, numeroCartao, limite, proposta, vencimento.converterParaEntidade());
+		return new Cartao(titular, numeroCartao, limite, proposta, vencimento.converterParaEntidade());
 	}
 	
 	

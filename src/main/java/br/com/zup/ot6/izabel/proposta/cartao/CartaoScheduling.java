@@ -1,4 +1,4 @@
-package br.com.zup.ot6.izabel.proposta.elegibilidade;
+package br.com.zup.ot6.izabel.proposta.cartao;
 
 import java.util.List;
 

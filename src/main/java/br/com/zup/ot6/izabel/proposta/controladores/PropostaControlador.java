@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.zup.ot6.izabel.proposta.cartao.ValidadorCartao;
 import br.com.zup.ot6.izabel.proposta.dto.PropostaRequestDTO;
 import br.com.zup.ot6.izabel.proposta.dto.PropostaResponseDTO;
-import br.com.zup.ot6.izabel.proposta.elegibilidade.AvaliadorElegibilidade;
 import br.com.zup.ot6.izabel.proposta.elegibilidade.RetornoElegibilidade;
 import br.com.zup.ot6.izabel.proposta.entidades.Proposta;
 import br.com.zup.ot6.izabel.proposta.excecoes.ProspostaExistenteValidador;
@@ -38,14 +38,14 @@ public class PropostaControlador {
 
 	public ProspostaExistenteValidador propostaValidador;
 	
-	public AvaliadorElegibilidade avaliadorElegibilidade;
+	public ValidadorCartao validadorCartao;
 	
 	@Autowired
 	public PropostaControlador(ProspostaExistenteValidador propostaValidador,
-			AvaliadorElegibilidade avaliadorElegibilidade) {
+			ValidadorCartao validadorCartao) {
 		super();
 		this.propostaValidador = propostaValidador;
-		this.avaliadorElegibilidade = avaliadorElegibilidade;
+		this.validadorCartao = validadorCartao;
 	}
 
 	@InitBinder
@@ -75,7 +75,7 @@ public class PropostaControlador {
 		
 		logger.info("Proposta {} salva.", proposta.toString());
 		
-		RetornoElegibilidade status = avaliadorElegibilidade.avaliaElegibilidade(proposta);
+		RetornoElegibilidade status = validadorCartao.avaliaElegibilidade(proposta);
 		
 		logger.info("Status de elegibilidade {}", status);
 

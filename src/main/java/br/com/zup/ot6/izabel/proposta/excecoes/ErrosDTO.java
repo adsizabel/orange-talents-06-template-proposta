@@ -15,9 +15,9 @@ public class ErrosDTO {
 	private List<RespostaPadraoDTO> errosCampos = new ArrayList<>();
 	@JsonProperty("errosGlobais")
 	private List<String> errosGlobais = new ArrayList<>();
-	
+
 	public ErrosDTO() {}
-	
+
 	public ErrosDTO(List<RespostaPadraoDTO> erros, List<String> errosGlobais) {
 		super();
 		this.quantidadeErros = erros.size();
@@ -47,8 +47,10 @@ public class ErrosDTO {
 	public List<String> getErrosGlobais() {
 		return errosGlobais;
 	}
-	
-	
-	
+
+	public List<RespostaPadraoDTO> getErrosCampos() {
+		return errosCampos;
+	}
+
 	
 }

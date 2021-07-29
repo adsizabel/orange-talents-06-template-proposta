@@ -6,13 +6,18 @@ import java.util.List;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import br.com.zup.ot6.izabel.proposta.cartao.StatusBloqueio;
 
 
 @Entity
@@ -33,25 +38,23 @@ public class Cartao {
 	private Proposta proposta;
 	@Embedded
 	private Vencimento vencimento;
+	@Enumerated(EnumType.STRING)
+	private StatusBloqueio bloqueio;
+	
 	
 	@Deprecated
 	public Cartao() {}
 
-	public Cartao(@NotNull LocalDateTime emitidoEm, @NotBlank String titular, @NotBlank String numero,
+	public Cartao(@NotBlank String titular, @NotBlank String numero,
 			@NotNull BigDecimal limite, Proposta proposta, Vencimento vencimento) {
 		super();
-		this.emitidoEm = emitidoEm;
+		this.emitidoEm = LocalDateTime.now();
 		this.titular = titular;
 		this.numero = numero;
 		this.limite = limite;
 		this.proposta = proposta;
 		this.vencimento = vencimento;
-	}
-
-	@Override
-	public String toString() {
-		return "Cartao [id=" + id + ", emitidoEm=" + emitidoEm + ", titular=" + titular + ", numero=" + numero
-				+ ", limite=" + limite + ", proposta=" + proposta + ", vencimento=" + vencimento + "]";
+		this.bloqueio = StatusBloqueio.DESBLOQUEADO;	
 	}
 
 	public Long getId() {
@@ -82,12 +85,21 @@ public class Cartao {
 		return vencimento;
 	}
 
+	public StatusBloqueio getBloqueio() {
+		return bloqueio;
+	}
+
 	public void setVencimento(Vencimento vencimento) {
 		this.vencimento = vencimento;
 	}
 
 	public void associaProposta(Proposta proposta) {
 		this.proposta = proposta;
+	}
+	
+	public Bloqueio bloquearCartao(String ip, String userAgent) {
+		this.bloqueio = StatusBloqueio.BLOQUEADO;
+		return new Bloqueio(ip, userAgent, this);
 	}
 	
 }

@@ -1,4 +1,4 @@
-package br.com.zup.ot6.izabel.proposta.elegibilidade;
+package br.com.zup.ot6.izabel.proposta.cartao;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
