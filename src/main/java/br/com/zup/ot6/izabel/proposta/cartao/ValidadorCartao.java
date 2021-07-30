@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import br.com.zup.ot6.izabel.proposta.dto.AvisoApiExternaRequest;
+import br.com.zup.ot6.izabel.proposta.dto.AvisoApiExternaResponse;
+import br.com.zup.ot6.izabel.proposta.dto.AvisoRequest;
 import br.com.zup.ot6.izabel.proposta.dto.BloqueioRequest;
 import br.com.zup.ot6.izabel.proposta.dto.BloqueioResponse;
 import br.com.zup.ot6.izabel.proposta.dto.ElegibilidadeRequest;
@@ -24,12 +27,12 @@ public class ValidadorCartao {
 	private static final Logger logger = LoggerFactory.getLogger(ValidadorCartao.class);
 
 	private final ElegibilidadeClienteFeign clienteElegibilidade;
-	private final CartaoClienteFeign clienteBloqueio;
+	private final CartaoClienteFeign clienteCartao;
 
 	@Autowired
 	public ValidadorCartao(ElegibilidadeClienteFeign clienteElegibilidade, CartaoClienteFeign clienteBloqueio) {
 		this.clienteElegibilidade = clienteElegibilidade;
-		this.clienteBloqueio = clienteBloqueio;
+		this.clienteCartao = clienteBloqueio;
 	}
 	
 	public RetornoElegibilidade avaliaElegibilidade(Proposta proposta) {
@@ -62,7 +65,7 @@ public class ValidadorCartao {
 		}
 		
 		try {
-			BloqueioResponse bloqueioResponse = clienteBloqueio.notificaBloqueioAoLegado(cartao.getNumero(), bloqueioRequest);
+			BloqueioResponse bloqueioResponse = clienteCartao.notificaBloqueioAoLegado(cartao.getNumero(), bloqueioRequest);
 			logger.info("Notificação ao Legado Realizada");
 			return bloqueioResponse;
 		} catch (FeignException e) {
@@ -70,6 +73,22 @@ public class ValidadorCartao {
 			throw new IllegalStateException("Não foi possível efetuar esta solicitação.");
 		}
 		
+	}
+	
+	public AvisoApiExternaResponse avisoViagem(Cartao cartao, AvisoRequest request) {
+		
+		logger.info("Inicio da notificação de viagem.");
+		
+		AvisoApiExternaRequest apiExternaRequest = new AvisoApiExternaRequest(request.getDestino(), request.getTerminoDaViagem());
+		
+		try {
+			AvisoApiExternaResponse response = clienteCartao.avisoViagemAoLegado(cartao.getNumero(), apiExternaRequest);
+			logger.info("Notificação ao Legado Realizada");
+			return response;
+		} catch (FeignException.BadRequest e) {
+			logger.info("Não foi possível efetuar esta solicitação. {} ", e.getMessage());
+			throw new IllegalStateException("Não foi possível efetuar esta solicitação.");
+		}	
 	}
 	
 	public Bloqueio atualizarBloqueio(Cartao cartao, String ip, String sistemaResponsavel) {

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.zup.ot6.izabel.proposta.cartao.ValidadorCartao;
 import br.com.zup.ot6.izabel.proposta.dto.AvisoRequest;
 import br.com.zup.ot6.izabel.proposta.entidades.Aviso;
 import br.com.zup.ot6.izabel.proposta.entidades.Cartao;
@@ -23,11 +24,14 @@ public class AvisoControlador {
 	
 	@PersistenceContext
 	private EntityManager entityManager;
+	private ValidadorCartao validadorCartao;
+
 
 	@Autowired
-	public AvisoControlador(EntityManager entityManager) {
+	public AvisoControlador(EntityManager entityManager, ValidadorCartao validadorCartao) {
 		super();
 		this.entityManager = entityManager;
+		this.validadorCartao = validadorCartao;
 	}
 
 	@Transactional
@@ -38,10 +42,13 @@ public class AvisoControlador {
 		String ip = http.getRemoteAddr();
 		String sistemaResponsavel = http.getHeader(HttpHeaders.USER_AGENT);
 		
+		
 		Cartao cartao = entityManager.find(Cartao.class, id);
 		if(cartao == null) {
 			return ResponseEntity.notFound().build();
 		}
+		
+		validadorCartao.avisoViagem(cartao, avisoRequest);
 		
 		Aviso aviso = avisoRequest.toModel(ip, sistemaResponsavel, cartao);
 		entityManager.persist(aviso);
