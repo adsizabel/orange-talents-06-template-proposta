@@ -12,7 +12,7 @@
 	<groupId>br.com.zup.ot6.izabel</groupId>
 	<artifactId>proposta</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>proposta</name>
+	<name>proposta-api</name>
 	<description>Desafio Proposta - OT6</description>
 	<properties>
 		<java.version>11</java.version>
@@ -68,6 +68,7 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-oauth2-jose</artifactId>
 		</dependency>
+		
 		<dependency>
     		<groupId>io.micrometer</groupId>
     		<artifactId>micrometer-registry-prometheus</artifactId>
@@ -77,6 +78,7 @@
 			<artifactId>opentracing-spring-jaeger-web-starter</artifactId>
 			<version>3.3.1</version>
 		</dependency>
+		
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

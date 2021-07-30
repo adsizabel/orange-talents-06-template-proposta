@@ -15,7 +15,8 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests(authorizeRequests ->
         authorizeRequests
-        			.antMatchers(GET, "actuator/health**").hasAuthority("SCOPE_actuator")
+        			.antMatchers(GET, "/actuator/health/**").hasAuthority("SCOPE_actuator")
+        			.antMatchers(GET, "/actuator/prometheus/**").permitAll()
         			.antMatchers(POST, "/proposta/**").hasAuthority("SCOPE_proposta")
         			.antMatchers(GET, "/proposta/**").hasAuthority("SCOPE_proposta")
         			.antMatchers(POST, "/cartao/**").hasAuthority("SCOPE_cartao")
