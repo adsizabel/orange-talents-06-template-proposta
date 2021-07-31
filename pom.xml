@@ -69,6 +69,8 @@
 			<artifactId>spring-security-oauth2-jose</artifactId>
 		</dependency>
 		
+		<!-- evidenciando as dependências do Prometheus e Jaeger, uma vez que eu
+				já havia implementado em atividades anteriores -->
 		<dependency>
     		<groupId>io.micrometer</groupId>
     		<artifactId>micrometer-registry-prometheus</artifactId>
@@ -78,6 +80,8 @@
 			<artifactId>opentracing-spring-jaeger-web-starter</artifactId>
 			<version>3.3.1</version>
 		</dependency>
+		<!-- evidenciando as dependências do Prometheus e Jaeger, uma vez que eu
+				já havia implementado em atividades anteriores -->
 		
 	</dependencies>
 	<dependencyManagement>
