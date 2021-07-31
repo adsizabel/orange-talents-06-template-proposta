@@ -9,14 +9,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import br.com.zup.ot6.izabel.proposta.elegibilidade.Elegibilidade;
 import br.com.zup.ot6.izabel.proposta.entidades.Proposta;
 import br.com.zup.ot6.izabel.proposta.excecoes.CpfCnpj;
 
-public class PropostaRequestDTO {
+public class PropostaRequest {
 	@NotBlank
 	private String nome;
-	@CpfCnpj
 	private String cpfCnpj;
 	@NotBlank
 	@Email
@@ -29,7 +30,7 @@ public class PropostaRequestDTO {
 	@Enumerated(EnumType.STRING)
 	private Elegibilidade elegibilidade;
 	
-	public PropostaRequestDTO(@NotBlank String nome, String cpfCnpj, @NotBlank @Email String email,
+	public PropostaRequest(@NotBlank String nome, String cpfCnpj, @NotBlank @Email String email,
 			@NotBlank String endereco, @NotNull @Positive BigDecimal salario, Elegibilidade elegibilidade) {
 		super();
 		this.nome = nome;
@@ -40,7 +41,9 @@ public class PropostaRequestDTO {
 		this.elegibilidade = elegibilidade;
 	}
 
-	public Proposta coverterParaEntidade(PropostaRequestDTO propostaRequestDTO) {
+	public Proposta coverterParaEntidade(PropostaRequest propostaRequest) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+        this.cpfCnpj = encoder.encode(cpfCnpj);
 		return new Proposta(nome, cpfCnpj, email, endereco, salario);
 	}
 
@@ -70,7 +73,7 @@ public class PropostaRequestDTO {
 
 	@Override
 	public String toString() {
-		return "PropostaRequestDTO [nome=" + nome + ", cpfCnpj=" + cpfCnpj + ", email=" + email + ", endereco="
+		return "PropostaRequest [nome=" + nome + ", cpfCnpj=" + cpfCnpj + ", email=" + email + ", endereco="
 				+ endereco + ", salario=" + salario + ", elegibilidade=" + elegibilidade + "]";
 	}
 
