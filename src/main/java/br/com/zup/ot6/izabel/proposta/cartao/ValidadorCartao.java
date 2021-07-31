@@ -1,7 +1,5 @@
 package br.com.zup.ot6.izabel.proposta.cartao;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +10,9 @@ import br.com.zup.ot6.izabel.proposta.dto.AvisoApiExternaResponse;
 import br.com.zup.ot6.izabel.proposta.dto.AvisoRequest;
 import br.com.zup.ot6.izabel.proposta.dto.BloqueioRequest;
 import br.com.zup.ot6.izabel.proposta.dto.BloqueioResponse;
+import br.com.zup.ot6.izabel.proposta.dto.CarteiraApiExternaRequest;
+import br.com.zup.ot6.izabel.proposta.dto.CarteiraApiExternaResponse;
+import br.com.zup.ot6.izabel.proposta.dto.CarteiraRequest;
 import br.com.zup.ot6.izabel.proposta.dto.ElegibilidadeRequest;
 import br.com.zup.ot6.izabel.proposta.dto.ElegibilidadeResponse;
 import br.com.zup.ot6.izabel.proposta.elegibilidade.ElegibilidadeClienteFeign;
@@ -60,7 +61,7 @@ public class ValidadorCartao {
 		
 		logger.info("Inicio da notificação de bloqueio do cartão");
 
-		if(jaBloqueado(cartao)) {
+		if(cartao.jaBloqueado()) {
 			throw new IllegalStateException("Cartão já está bloqueado");
 		}
 		
@@ -91,24 +92,26 @@ public class ValidadorCartao {
 		}	
 	}
 	
+	public CarteiraApiExternaResponse associarCarteira(Cartao cartao, CarteiraRequest carteiraRequest) {
+		
+		logger.info("Inicio da associação à carteira digital PayPal");
+		
+		CarteiraApiExternaRequest  apiExternaRequest = new CarteiraApiExternaRequest(carteiraRequest.getEmail(), carteiraRequest.getCarteira());
+		
+		try {
+			CarteiraApiExternaResponse response = clienteCartao.associarCarteira(cartao.getNumero(), apiExternaRequest);
+			logger.info("Associação a Carteira digital realizada");
+			return response;
+		} catch (FeignException.BadRequest e) {
+			throw new IllegalStateException("Não foi possível efetuar esta solicitação.");
+		}
+	}
+	
 	public Bloqueio atualizarBloqueio(Cartao cartao, String ip, String sistemaResponsavel) {
-		if(jaBloqueado(cartao)) {
+		if(cartao.jaBloqueado()) {
 			throw new IllegalStateException("Cartão já está bloqueado");
 		}
 		return cartao.bloquearCartao(ip, sistemaResponsavel);
 	}
 
-	public boolean jaBloqueado(Cartao cartao) {
-		return cartao.getBloqueio().equals(StatusBloqueio.BLOQUEADO);
-		
-	}
-	
-	public String recuperaIp(HttpServletRequest request) {
-		String ipAddress = request.getHeader("X-FORWARDED-FOR");
-		if (ipAddress == null) {
-			ipAddress = request.getRemoteAddr();
-		}
-
-		return ipAddress;
-	}
 }

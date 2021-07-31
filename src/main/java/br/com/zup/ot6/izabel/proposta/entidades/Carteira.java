@@ -1,15 +1,12 @@
 package br.com.zup.ot6.izabel.proposta.entidades;
 
-import java.time.LocalDate;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 public class Carteira {
@@ -19,24 +16,32 @@ public class Carteira {
 	@Email
 	@NotBlank
 	private String email;
-	@NotNull
-	@CreationTimestamp
-	private LocalDate associadaEm;
+	@OneToOne(cascade = CascadeType.ALL)
+	private Cartao cartao;
 	@NotBlank
-	private String emissor;
+	private String carteira;
 	
+	@Deprecated
 	public Carteira() {}
 
-	public Carteira(@Email @NotBlank String email, @NotBlank String emissor) {
+
+	public Carteira(@Email @NotBlank String email, Cartao cartao, @NotBlank String carteira) {
 		super();
 		this.email = email;
-		this.emissor = emissor;
+		this.cartao = cartao;
+		this.carteira = carteira;
 	}
 
-	@Override
-	public String toString() {
-		return "Carteira [id=" + id + ", email=" + email + ", associadaEm=" + associadaEm + ", emissor=" + emissor
-				+ "]";
+	public Long getId() {
+		return id;
+	}
+
+	public Cartao getCartao() {
+		return cartao;
+	}
+
+	public String getEmail() {
+		return email;
 	}
 	
 	

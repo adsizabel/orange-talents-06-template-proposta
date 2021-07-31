@@ -2,7 +2,6 @@ package br.com.zup.ot6.izabel.proposta.entidades;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -11,8 +10,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -40,6 +37,8 @@ public class Cartao {
 	private Vencimento vencimento;
 	@Enumerated(EnumType.STRING)
 	private StatusBloqueio bloqueio;
+	@OneToOne(mappedBy = "cartao")
+	private Carteira carteira;
 	
 	
 	@Deprecated
@@ -100,6 +99,22 @@ public class Cartao {
 	public Bloqueio bloquearCartao(String ip, String userAgent) {
 		this.bloqueio = StatusBloqueio.BLOQUEADO;
 		return new Bloqueio(ip, userAgent, this);
+	}
+	
+	public boolean associarCarteira(Carteira carteira) {
+		if(jaAssociado())
+			return false;
+		this.carteira = carteira;
+		return true;		
+	}
+	
+	public boolean jaBloqueado() {
+		return this.bloqueio.equals(StatusBloqueio.BLOQUEADO);
+		
+	}
+	
+	public boolean jaAssociado() {
+		return this.carteira != null;
 	}
 	
 }

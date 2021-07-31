@@ -37,7 +37,7 @@ public class BloqueioCartaoControlador {
 	@PostMapping(value = "/cartao/{id}")
 	public ResponseEntity<Bloqueio> bloquearCartao(@PathVariable("id") Long id, HttpServletRequest request) {
 		
-		String ip = validadorCartao.recuperaIp(request);
+		String ip = request.getLocalAddr();
 		String sistemaResponsavel = request.getHeader(HttpHeaders.USER_AGENT);
 		
 		BloqueioRequest bloqueioRequest = new BloqueioRequest(sistemaResponsavel);
