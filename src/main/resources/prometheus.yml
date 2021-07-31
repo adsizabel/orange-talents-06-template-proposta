@@ -1,3 +1,6 @@
+# evidenciando as configuracoes do Prometheus, uma vez que eu
+# ja havia implementado em atividades anteriores
+
 global:
   scrape_interval: 15s
   evaluation_interval: 15s
