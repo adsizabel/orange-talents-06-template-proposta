@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.com.zup.ot6.izabel.proposta.cartao.CarteiraDigital;
 import br.com.zup.ot6.izabel.proposta.cartao.ValidadorCartao;
 import br.com.zup.ot6.izabel.proposta.dto.CarteiraRequest;
 import br.com.zup.ot6.izabel.proposta.entidades.Cartao;
@@ -25,6 +26,7 @@ public class CarteiraControlador {
 	@PersistenceContext
 	private EntityManager entityManager;
 	private ValidadorCartao validadorCartao;
+	private CarteiraDigital digital;
 
 	@Autowired
 	public CarteiraControlador(EntityManager entityManager, ValidadorCartao validadorCartao) {
@@ -34,17 +36,24 @@ public class CarteiraControlador {
 	}
 
 	@Transactional
-	@PostMapping(value = "/carteiras/{id}")
-	public ResponseEntity<Carteira> associarCarteira(@PathVariable("id") Long id, @RequestBody CarteiraRequest carteiraRequest) {
+	@PostMapping(value = "/carteiras/{id}/{tipoCarteira}")
+	public ResponseEntity<Carteira> associarCarteira(@PathVariable("id") Long id, 
+			@RequestBody CarteiraRequest carteiraRequest, @PathVariable("tipoCarteira") String tipoCarteira) {
 
 		Cartao cartao = entityManager.find(Cartao.class, id);
 		if(cartao == null) {
 			return ResponseEntity.notFound().build();
 		}
+	
+		if(tipoCarteira.equalsIgnoreCase(CarteiraDigital.PAYPAL.toString())) {
+			digital = CarteiraDigital.PAYPAL;
+		} else {
+			digital = CarteiraDigital.SAMSUNG_PAY;
+		}
 		
-		validadorCartao.associarCarteira(cartao, carteiraRequest);
+		validadorCartao.associarCarteira(cartao, carteiraRequest, digital.toString());
 		
-		Carteira carteira = carteiraRequest.converterParaEntidade(cartao);
+		Carteira carteira = new Carteira(carteiraRequest.getEmail(), cartao, digital);
 		entityManager.persist(carteira);
 		
 		URI location = ServletUriComponentsBuilder

@@ -92,11 +92,12 @@ public class ValidadorCartao {
 		}	
 	}
 	
-	public CarteiraApiExternaResponse associarCarteira(Cartao cartao, CarteiraRequest carteiraRequest) {
+	public CarteiraApiExternaResponse associarCarteira(Cartao cartao, CarteiraRequest carteiraRequest, String tipoCarteira) {
 		
 		logger.info("Inicio da associação à carteira digital PayPal");
 		
-		CarteiraApiExternaRequest  apiExternaRequest = new CarteiraApiExternaRequest(carteiraRequest.getEmail(), carteiraRequest.getCarteira());
+		CarteiraApiExternaRequest  apiExternaRequest = new CarteiraApiExternaRequest
+				(carteiraRequest.getEmail(), tipoCarteira);
 		
 		try {
 			CarteiraApiExternaResponse response = clienteCartao.associarCarteira(cartao.getNumero(), apiExternaRequest);

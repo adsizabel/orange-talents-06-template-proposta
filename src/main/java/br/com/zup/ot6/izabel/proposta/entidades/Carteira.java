@@ -2,11 +2,15 @@ package br.com.zup.ot6.izabel.proposta.entidades;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+
+import br.com.zup.ot6.izabel.proposta.cartao.CarteiraDigital;
 
 @Entity
 public class Carteira {
@@ -19,13 +23,13 @@ public class Carteira {
 	@OneToOne(cascade = CascadeType.ALL)
 	private Cartao cartao;
 	@NotBlank
-	private String carteira;
+	@Enumerated(EnumType.STRING)
+	private CarteiraDigital carteira;
 	
 	@Deprecated
 	public Carteira() {}
 
-
-	public Carteira(@Email @NotBlank String email, Cartao cartao, @NotBlank String carteira) {
+	public Carteira(@Email @NotBlank String email, Cartao cartao, @NotBlank CarteiraDigital carteira) {
 		super();
 		this.email = email;
 		this.cartao = cartao;
@@ -43,7 +47,9 @@ public class Carteira {
 	public String getEmail() {
 		return email;
 	}
-	
-	
+
+	public CarteiraDigital getCarteira() {
+		return carteira;
+	}
 
 }
