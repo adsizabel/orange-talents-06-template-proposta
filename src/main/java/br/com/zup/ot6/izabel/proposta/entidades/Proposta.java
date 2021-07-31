@@ -15,6 +15,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import br.com.zup.ot6.izabel.proposta.elegibilidade.Elegibilidade;
 import br.com.zup.ot6.izabel.proposta.excecoes.CpfCnpj;
 
@@ -26,7 +28,6 @@ public class Proposta {
 	private Long id;
 	@NotBlank
 	private String nome;
-	@CpfCnpj
 	private String cpfCnpj;
 	@NotBlank
 	@Email
@@ -48,7 +49,7 @@ public class Proposta {
 			@NotNull @Positive BigDecimal salario) {
 		super();
 		this.nome = nome;
-		this.cpfCnpj = cpfCnpj;
+		this.cpfCnpj = getOfuscadorDados(cpfCnpj);
 		this.email = email;
 		this.endereco = endereco;
 		this.salario = salario;
@@ -97,6 +98,11 @@ public class Proposta {
 	 */
 	public void setElegibilidade(Elegibilidade elegibilidade) {
 		this.elegibilidade = elegibilidade;
+	}
+	
+	public String getOfuscadorDados(String dado) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
+		return encoder.encode(dado);
 	}
 	
 	@Override

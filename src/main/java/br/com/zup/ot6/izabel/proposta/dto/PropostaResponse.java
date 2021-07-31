@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import br.com.zup.ot6.izabel.proposta.entidades.Proposta;
 
-public class PropostaResponseDTO {
+public class PropostaResponse {
 	private String nome;
 	private String cpfCnpj;
 	private String email;
@@ -12,7 +12,7 @@ public class PropostaResponseDTO {
 	private BigDecimal salario;
 	private String elegibilidade;
 	
-	public PropostaResponseDTO(Proposta proposta) {
+	public PropostaResponse(Proposta proposta) {
 		this.nome = proposta.getNome();
 		this.cpfCnpj = proposta.getCpfCnpj();
 		this.email = proposta.getEmail();

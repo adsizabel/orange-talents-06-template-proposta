@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.zup.ot6.izabel.proposta.cartao.ValidadorCartao;
-import br.com.zup.ot6.izabel.proposta.dto.PropostaRequestDTO;
-import br.com.zup.ot6.izabel.proposta.dto.PropostaResponseDTO;
+import br.com.zup.ot6.izabel.proposta.dto.PropostaRequest;
+import br.com.zup.ot6.izabel.proposta.dto.PropostaResponse;
 import br.com.zup.ot6.izabel.proposta.elegibilidade.RetornoElegibilidade;
 import br.com.zup.ot6.izabel.proposta.entidades.Proposta;
 import br.com.zup.ot6.izabel.proposta.excecoes.ProspostaExistenteValidador;
@@ -54,23 +54,23 @@ public class PropostaControlador {
 	}
 	
 	@GetMapping(value = "/proposta/{id}")
-	public ResponseEntity<PropostaResponseDTO> acompanharProposta(@PathVariable("id") Long id) {
+	public ResponseEntity<PropostaResponse> acompanharProposta(@PathVariable("id") Long id) {
 		Proposta proposta = entityManager.find(Proposta.class, id);
 		
 		if(proposta == null) {
 			return ResponseEntity.notFound().build();
 		}
 		
-		PropostaResponseDTO propostaResponseDTO = new PropostaResponseDTO(proposta);
-		return ResponseEntity.ok(propostaResponseDTO);
+		PropostaResponse propostaResponse = new PropostaResponse(proposta);
+		return ResponseEntity.ok(propostaResponse);
 	}
 
 	
 	@PostMapping(value = "/proposta")
 	@Transactional
-	public ResponseEntity<?> cadastrarProposta(@RequestBody @Valid PropostaRequestDTO propostaRequestDTO) {
+	public ResponseEntity<?> cadastrarProposta(@RequestBody @Valid PropostaRequest propostaRequest) {
 
-		Proposta proposta = propostaRequestDTO.coverterParaEntidade(propostaRequestDTO);
+		Proposta proposta = propostaRequest.coverterParaEntidade(propostaRequest);
 		entityManager.persist(proposta);
 		
 		logger.info("Proposta {} salva.", proposta.toString());

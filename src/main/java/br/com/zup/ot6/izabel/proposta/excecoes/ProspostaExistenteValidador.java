@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import br.com.zup.ot6.izabel.proposta.dto.PropostaRequestDTO;
+import br.com.zup.ot6.izabel.proposta.dto.PropostaRequest;
 import br.com.zup.ot6.izabel.proposta.entidades.Proposta;
 import br.com.zup.ot6.izabel.proposta.repositorio.PropostaRepositorio;
 
@@ -22,7 +22,7 @@ public class ProspostaExistenteValidador implements Validator{
 
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return PropostaRequestDTO.class.isAssignableFrom(clazz);
+		return PropostaRequest.class.isAssignableFrom(clazz);
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class ProspostaExistenteValidador implements Validator{
 			return;
 		}
 		
-		PropostaRequestDTO request = (PropostaRequestDTO) target;
+		PropostaRequest request = (PropostaRequest) target;
 		
 		List<Proposta> propostaPesquisada = propostaRepositorio.findByCpfCnpj(request.getCpfCnpj());
 		
